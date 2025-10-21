@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoStream Upload Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #007bff; text-align: center; }
+        .step { 
+            background: #e9ecef; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .step h3 { margin-top: 0; color: #007bff; }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .btn:hover { background: #0056b3; }
+        .success { color: #28a745; font-weight: bold; }
+        .info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 VideoStream Upload Test</h1>
+        
+        <div class="step">
+            <h3>Step 1: Access Your App</h3>
+            <p>Click the button below to open your VideoStream app:</p>
+            <a href="http://192.168.1.4:8000" class="btn" target="_blank">Open VideoStream App</a>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Register Account</h3>
+            <p>If you haven't already, create an account:</p>
+            <ul>
+                <li>Click "Register" in the top right</li>
+                <li>Fill in your details</li>
+                <li>Click "Register"</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Upload Video</h3>
+            <p>Upload your first video:</p>
+            <ul>
+                <li>Click "Upload Video" button</li>
+                <li>Add title and description</li>
+                <li>Select your video file</li>
+                <li>Click "Upload Video"</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Configure Monetization</h3>
+            <p>Set up ads to start earning money:</p>
+            <ul>
+                <li>Go to "Earnings" → "Ad Settings"</li>
+                <li>Select your video</li>
+                <li>Set ad positions (0s, 30s, end)</li>
+                <li>Save settings</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3>Step 5: Share & Earn</h3>
+            <p class="success">Share this URL with friends: <strong>http://192.168.1.4:8000</strong></p>
+            <p class="info">They can access your videos from their phones and laptops!</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="http://192.168.1.4:8000" class="btn" target="_blank">Start Uploading Videos Now!</a>
+        </div>
+    </div>
+</body>
+</html>

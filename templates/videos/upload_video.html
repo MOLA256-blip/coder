@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Video - VideoStream{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>Upload New Video
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+                    
+                    <!-- Video File Upload -->
+                    <div class="mb-4">
+                        <label for="{{ form.video_file.id_for_label }}" class="form-label">
+                            <i class="fas fa-video me-2"></i>Video File *
+                        </label>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <h5>Drag and drop your video here</h5>
+                            <p class="text-muted">or click to browse files</p>
+                            {{ form.video_file }}
+                            <small class="form-text text-muted">Supported formats: MP4, AVI, MOV, WMV, MKV, WebM. Max size: 100MB</small>
+                        </div>
+                        {% if form.video_file.errors %}
+                        <div class="text-danger mt-2">
+                            {% for error in form.video_file.errors %}
+                            <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Upload Progress -->
+                        <div class="upload-progress">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted mt-1">Uploading...</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Details -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">
+                                    <i class="fas fa-heading me-2"></i>Title *
+                                </label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.title.errors %}
+                                    <small>{{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <div class="form-check mt-4">
+                                    {{ form.is_public }}
+                                    <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
+                                        <i class="fas fa-globe me-2"></i>Make this video public
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">
+                            <i class="fas fa-align-left me-2"></i>Description
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                        <div class="text-danger mt-1">
+                            {% for error in form.description.errors %}
+                            <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Thumbnail Upload -->
+                    <div class="mb-4">
+                        <label for="{{ form.thumbnail.id_for_label }}" class="form-label">
+                            <i class="fas fa-image me-2"></i>Custom Thumbnail
+                        </label>
+                        {{ form.thumbnail }}
+                        <small class="form-text text-muted">Optional. If not provided, a default thumbnail will be used.</small>
+                        {% if form.thumbnail.errors %}
+                        <div class="text-danger mt-1">
+                            {% for error in form.thumbnail.errors %}
+                            <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Submit Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-upload me-2"></i>Upload Video
+                            <span class="loading-spinner spinner-border spinner-border-sm ms-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Upload Tips -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Upload Tips
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-check-circle text-success me-2"></i>Best Practices</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Use descriptive titles</li>
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Add detailed descriptions</li>
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Upload custom thumbnails</li>
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Choose appropriate privacy settings</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-info-circle text-info me-2"></i>Technical Requirements</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Max file size: 100MB</li>
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Supported formats: MP4, AVI, MOV, WMV</li>
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Recommended resolution: 720p or higher</li>
+                            <li><i class="fas fa-dot-circle text-primary me-2"></i>Thumbnails auto-generated if not provided</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('id_video_file');
+    const uploadForm = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingSpinner = submitBtn.querySelector('.loading-spinner');
+    const progressContainer = document.querySelector('.upload-progress');
+    const progressBar = document.querySelector('.progress-bar');
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            updateFileDisplay(files[0]);
+        }
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            updateFileDisplay(this.files[0]);
+        }
+    });
+    
+    function updateFileDisplay(file) {
+        const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+        uploadArea.innerHTML = `
+            <i class="fas fa-file-video fa-3x text-success mb-3"></i>
+            <h5>${file.name}</h5>
+            <p class="text-muted">Size: ${fileSize} MB</p>
+            <small class="text-success">File ready for upload</small>
+        `;
+    }
+    
+    // Form submission with loading state
+    uploadForm.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        loadingSpinner.style.display = 'inline-block';
+        progressContainer.style.display = 'block';
+        
+        // Simulate upload progress
+        let progress = 0;
+        const progressInterval = setInterval(function() {
+            progress += Math.random() * 10;
+            if (progress >= 90) {
+                progress = 90;
+                clearInterval(progressInterval);
+            }
+            progressBar.style.width = progress + '%';
+        }, 500);
+    });
+    
+    // Auto-generate title from filename
+    fileInput.addEventListener('change', function() {
+        const titleInput = document.getElementById('id_title');
+        if (this.files.length > 0 && !titleInput.value) {
+            const filename = this.files[0].name;
+            const titleFromFilename = filename.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ");
+            titleInput.value = titleFromFilename;
+        }
+    });
+});
+</script>
+{% endblock %}

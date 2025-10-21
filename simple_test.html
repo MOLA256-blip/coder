@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VideoStream Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .box { background: white; padding: 20px; margin: 10px 0; border-radius: 10px; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🎬 VideoStream Test Page</h1>
+    
+    <div class="box">
+        <h3>📱 Mobile Test</h3>
+        <p>If you can see this on your phone, the connection works!</p>
+        <p><strong>Current URL:</strong> <span id="url"></span></p>
+        <p><strong>Time:</strong> <span id="time"></span></p>
+    </div>
+    
+    <div class="box">
+        <h3>🔗 Try These URLs on Your Phone:</h3>
+        <ul>
+            <li><a href="http://192.168.1.4:8000" target="_blank">http://192.168.1.4:8000</a></li>
+            <li><a href="http://192.168.1.4:8000/simple_test.html" target="_blank">http://192.168.1.4:8000/simple_test.html</a></li>
+        </ul>
+    </div>
+    
+    <div class="box">
+        <h3>🛠️ Troubleshooting</h3>
+        <ol>
+            <li>Make sure your phone is on the same WiFi as your computer</li>
+            <li>Turn off mobile data, use only WiFi</li>
+            <li>Try refreshing the page</li>
+            <li>Check if Windows Firewall is blocking the connection</li>
+        </ol>
+    </div>
+    
+    <div class="box">
+        <h3>🌐 Network Info</h3>
+        <p><strong>Computer IP:</strong> 192.168.1.4</p>
+        <p><strong>Port:</strong> 8000</p>
+        <p><strong>Full URL:</strong> http://192.168.1.4:8000</p>
+    </div>
+
+    <script>
+        document.getElementById('url').textContent = window.location.href;
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

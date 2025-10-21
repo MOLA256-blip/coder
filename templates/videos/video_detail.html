@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ video.title }} - VideoStream{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Video Player -->
+        <div class="card mb-4">
+            <div class="card-body p-0">
+                <video class="video-player" controls preload="metadata">
+                    <source src="{% url 'stream_video' video.id %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        
+        <!-- Video Info -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h2 class="card-title mb-2">{{ video.title }}</h2>
+                        <div class="video-meta">
+                            <span class="me-3">
+                                <i class="fas fa-eye me-1"></i>{{ video.views }} views
+                            </span>
+                            <span class="me-3">
+                                <i class="fas fa-clock me-1"></i>{{ video.uploaded_at|timesince }} ago
+                            </span>
+                            <span class="me-3">
+                                <i class="fas fa-file me-1"></i>{{ video.get_file_size }} MB
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Channel Info -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user text-white fa-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">{{ video.uploader.get_full_name|default:video.uploader.username }}</h5>
+                        <small class="text-muted">@{{ video.uploader.username }}</small>
+                    </div>
+                </div>
+                
+                <!-- Video Description -->
+                {% if video.description %}
+                <div class="mb-3">
+                    <h6>Description</h6>
+                    <p class="text-muted">{{ video.description|linebreaks }}</p>
+                </div>
+                {% endif %}
+                
+                <!-- Video Actions -->
+                <div class="border-top pt-3">
+                    {% if user == video.uploader %}
+                    <a href="{% url 'delete_video' video.id %}" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash me-1"></i>Delete Video
+                    </a>
+                    {% elif user.is_authenticated and user != video.uploader %}
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#tipModal">
+                        <i class="fas fa-coins me-1"></i>Send Tip
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comments Section -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-comments me-2"></i>Comments ({{ comments.count }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                <form method="POST" class="mb-4">
+                    {% csrf_token %}
+                    <div class="d-flex">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            {{ comment_form.content }}
+                            <div class="d-flex justify-content-end mt-2">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-paper-plane me-1"></i>Post Comment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {% else %}
+                <div class="text-center py-3 mb-4 bg-light rounded">
+                    <p class="mb-2">Please <a href="{% url 'login' %}">login</a> to leave a comment.</p>
+                </div>
+                {% endif %}
+                
+                <!-- Comments List -->
+                {% if comments %}
+                {% for comment in comments %}
+                <div class="comment-item">
+                    <div class="d-flex">
+                        <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px; min-width: 35px;">
+                            <i class="fas fa-user text-white fa-sm"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                                <small class="text-muted ms-2">{{ comment.created_at|timesince }} ago</small>
+                            </div>
+                            <p class="mb-0">{{ comment.content|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-comments fa-2x mb-2"></i>
+                    <p>No comments yet. Be the first to comment!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Related Videos -->
+        {% if related_videos %}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Related Videos
+                </h6>
+            </div>
+            <div class="card-body p-0">
+                {% for related_video in related_videos %}
+                <div class="d-flex p-3 border-bottom">
+                    <div class="position-relative me-3" style="min-width: 120px;">
+                        {% if related_video.thumbnail %}
+                        <img src="{{ related_video.thumbnail.url }}" class="img-fluid rounded" style="width: 120px; height: 68px; object-fit: cover;" alt="{{ related_video.title }}">
+                        {% else %}
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 120px; height: 68px;">
+                            <i class="fas fa-play text-white"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">
+                            <a href="{% url 'video_detail' related_video.id %}" class="text-decoration-none text-dark">
+                                {{ related_video.title|truncatechars:40 }}
+                            </a>
+                        </h6>
+                        <small class="text-muted d-block">{{ related_video.uploader.username }}</small>
+                        <small class="text-muted">
+                            <i class="fas fa-eye me-1"></i>{{ related_video.views }} views
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Tip Modal -->
+{% if user.is_authenticated and user != video.uploader %}
+<div class="modal fade" id="tipModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-coins me-2"></i>Send Tip to {{ video.uploader.username }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'send_tip' video.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Tip Amount ($)</label>
+                        <input type="number" class="form-control" name="amount" id="amount" 
+                               min="1" max="100" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message (Optional)</label>
+                        <textarea class="form-control" name="message" id="message" rows="3" 
+                                  placeholder="Leave a message for the creator..."></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_anonymous" id="is_anonymous">
+                        <label class="form-check-label" for="is_anonymous">
+                            Send anonymously
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-coins me-1"></i>Send Tip
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
