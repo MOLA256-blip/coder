@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 
 class VideoList(generics.GenericAPIView):
+    queryset = []  
+
     def get(self, request, *args, **kwargs):
         # Mock data - replace with actual video model later
         videos = [
