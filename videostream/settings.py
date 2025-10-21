@@ -19,7 +19,7 @@ SECRET_KEY = 'django-insecure-video-streaming-app-change-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['coder-47ty.onrender.com*', 'localhost', '127.0.0.1', ]
+ALLOWED_HOSTS = ['coder-47ty.onrender.com*', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
